@@ -37,6 +37,7 @@
 
 <script>
 import { Login } from '@/api/user'
+
 export default {
   name: 'Login',
   data () {
@@ -59,7 +60,7 @@ export default {
         this.isLoading = true
         const { data } = await Login(this.userInfo)
         this.$store.commit('setToken', data.data)
-        this.$router.push('/home')
+        this.$router.push('/tabbar')
       } catch (error) {
         console.log(error)
         if (error.response.status === 400) {
