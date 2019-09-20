@@ -58,9 +58,7 @@ export default {
         }
         this.isLoading = true
         const { data } = await Login(this.userInfo)
-        console.log(data)
-        localStorage.setItem('user-token', data.data.token)
-        this.$toast.success('登陆成功!')
+        this.$store.commit('setToken', data.data)
         this.$router.push('/home')
       } catch (error) {
         console.log(error)
@@ -74,6 +72,7 @@ export default {
       this.$toast.success('验证码已发送,注意查收!')
     }
   }
+
 }
 </script>
 
