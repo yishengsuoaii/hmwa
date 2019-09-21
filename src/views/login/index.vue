@@ -19,7 +19,7 @@
                 label="验证码" clearable
                 placeholder="请输入验证码:"
                 >
-                <van-button slot="button" size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" @click="commit">发送验证码</van-button>
+                <van-button slot="button" size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" @click.prevent="commit">发送验证码</van-button>
                 <van-icon name="fire" slot="left-icon" color="red"/>
         </van-field>
         <span>{{ errors[0] }}</span>

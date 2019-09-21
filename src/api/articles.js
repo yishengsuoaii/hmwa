@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export const articles = ({ channelId, timestamp, withTop }) => {
+export const article = ({ channelId, timestamp, withTop }) => {
   return request({
     url: '/app/v1_1/articles',
     method: 'GET',
