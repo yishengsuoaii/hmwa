@@ -5,7 +5,8 @@ import store from './store'
 import {
   Button, NavBar, Field, Toast,
   Icon, Cell, CellGroup, Tabbar,
-  TabbarItem, Tab, Tabs, List }
+  TabbarItem, Tab, Tabs, List, PullRefresh,
+  Grid, GridItem, Image }
   from 'vant'
 
 import '@/styles/index.less'
@@ -21,7 +22,8 @@ import zhCN from 'vee-validate/dist/locale/zh_CN' //
 Vue.use(Button).use(NavBar).use(Field)
   .use(Toast).use(Icon).use(Cell).use(CellGroup)
   .use(Tabbar).use(TabbarItem).use(Tab).use(Tabs)
-  .use(List)
+  .use(List).use(PullRefresh).use(Grid).use(GridItem)
+  .use(Image)
 Vue.config.productionTip = false
 
 for (let rule in rules) {
