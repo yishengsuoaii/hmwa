@@ -1,6 +1,9 @@
 <template>
     <div>
-        <van-nav-bar title="首页" />
+        <!-- 顶部 -->
+        <van-nav-bar title="首页" fixed />
+
+        <!-- 文章列表及navBar -->
         <van-tabs v-model="active" title-active-color="blue" color="skyblue">
             <van-tab :title="item.name" v-for="item in channels" :key="item.id">
                 <van-pull-refresh v-model="item.isLoading" @refresh="onRefresh">
@@ -9,14 +12,14 @@
                             <div slot="label">
                                 <van-grid border :column-num="3">
                                     <van-grid-item v-for="(ins,index) in items.cover.images" :key="index">
-                                        <van-image :src="ins" />
+                                        <van-image :src="ins" lazy-load />
                                     </van-grid-item>
                                 </van-grid>
                                 <div class="artivlesInfo">
                                     <div class="info">
                                         <span>{{items.aut_name}}</span>
                                         <i><van-icon name="comment-o" ></van-icon>{{items.comm_count}}评论</i>
-                                        <span>{{items.pubdate}}</span>
+                                        <span>{{items.pubdate|rTime}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -24,7 +27,23 @@
                     </van-list>
                 </van-pull-refresh>
             </van-tab>
+
+            <!--右侧图标 -->
+            <div slot="nav-right" class="icon" @click="showDialog=true">
+                <van-icon name="star-o" dot  size="22px" color= "red"/>
+            </div>
         </van-tabs>
+
+        <!-- 弹框 -->
+        <van-popup
+        v-model="showDialog"
+        position="bottom"
+        closeable
+        round
+        close-icon="close"
+        close-icon-position="top-left"
+        :style="{ height: '93%' }"
+        />
     </div>
 </template>
 
@@ -37,9 +56,7 @@ export default {
     return {
       active: 0,
       channels: [],
-      list: [],
-      loading: false,
-      finished: false
+      showDialog: false
     }
   },
   computed: {
@@ -96,8 +113,18 @@ export default {
 </script>
 
 <style lang="less">
+.van-tabs{
+    .van-tabs__wrap {
+        position: fixed;
+        top:46px;
+        left:0;
+        right:0;
+        z-index: 2;
+        color: gold
+    }
     .van-tabs__content {
       margin-bottom:50px;
+      margin-top:90px;
       .van-grid{
         .van-grid-item__content{
           background-color: #eee;
@@ -124,4 +151,12 @@ export default {
         }
       }
     }
+    .icon {
+        position: sticky;
+        right: 2px;
+        display: flex;
+        align-items: center;
+    }
+}
+
 </style>
