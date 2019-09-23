@@ -8,7 +8,7 @@ import {
   Icon, Cell, CellGroup, Tabbar,
   TabbarItem, Tab, Tabs, List, PullRefresh,
   Grid, GridItem, Image, Lazyload, Popup,
-  Dialog }
+  Dialog, Tag }
   from 'vant'
 
 import '@/styles/index.less'
@@ -21,7 +21,7 @@ import {
 import * as rules from 'vee-validate/dist/rules' // 加载所有的验证规则
 import zhCN from 'vee-validate/dist/locale/zh_CN' //
 Vue.filter('rTime', rTime)
-Vue.use(Button).use(NavBar).use(Field)
+Vue.use(Button).use(NavBar).use(Field).use(Tag)
   .use(Toast).use(Icon).use(Cell).use(CellGroup)
   .use(Tabbar).use(TabbarItem).use(Tab).use(Tabs)
   .use(List).use(PullRefresh).use(Grid).use(GridItem)

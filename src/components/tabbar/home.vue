@@ -41,13 +41,37 @@
         <van-popup
         v-model="showPopur"
         position="bottom"
-        closeable
         round
-        close-icon="close"
-        close-icon-position="top-left"
-        :style="{ height: '93%' }"
-        />
-
+        :style="{ height: '93%' }">
+        <van-icon name="cross" class="bigIco" @click="showPopur=false" color="red"/>
+            <van-cell-group>
+                <van-cell title="我的频道" size="large">
+                    <van-tag plain type="warning" @click="isEdit=!isEdit">
+                        {{isEdit?'完成':'编辑'}}
+                    </van-tag>
+                </van-cell>
+                <van-grid :gutter="10">
+                    <van-grid-item
+                    v-for="(item,index) in channels"
+                    @click="editChannel(item,index)"
+                    :key="item.id"
+                    :text="item.name">
+                    <van-icon name="close" class="smallIco" color="red" v-show="isEdit" slot="icon" />
+                    </van-grid-item>
+                </van-grid>
+            </van-cell-group>
+            <van-cell-group>
+                <van-cell title="频道推荐" size="large" />
+                <van-grid :gutter="10">
+                <van-grid-item
+                v-for="item in currentScreen"
+                :key="item.id"
+                :text="item.name"
+                @click="addChannel(item)"
+                />
+                </van-grid>
+            </van-cell-group>
+        </van-popup>
         <!-- Dialog弹框-->
         <van-dialog v-model="showDialog" :show-cancel-button="false" @confirm="confirms">
             <van-cell-group v-if="!isRubbishShow">
@@ -58,7 +82,7 @@
             </van-cell-group>
              <van-cell-group v-else>
                 <van-cell icon="arrow-left" title="反馈" title-style="text-align:center;color:red;" center @click="isRubbishShow = false" />
-                <van-cell icon="location-o" v-for="item in repotTypes" :key="item.type" :title="item.title" @click="fn(item.type)"/>
+                <van-cell v-for="item in repotTypes" :key="item.type" :title="item.title" @click="fn(item.type)"/>
 
              </van-cell-group>
         </van-dialog>
@@ -66,19 +90,23 @@
 </template>
 
 <script>
-import { channel } from '@/api/channel'
+import { allChannel, userChannel, changeChannel, removeChannel } from '@/api/channel'
 import { article } from '@/api/articles'
 import { feedback } from '@/api/feedback'
+import { mapState } from 'vuex'
+import { getItem, setItem } from '@/utils/storage'
 export default {
   name: 'home',
   data () {
     return {
       active: 0,
       channels: [],
-      showPopur: false,
+      allchannels: [],
+      showPopur: true,
       showDialog: false,
       isRubbishShow: false,
       data: {},
+      isEdit: false,
       repotTypes: [
         { title: '标题夸张', type: 1 },
         { title: '低俗色情', type: 2 },
@@ -93,31 +121,75 @@ export default {
     }
   },
   computed: {
+    ...mapState(['userToken']),
     currentChannel () {
       return this.channels[this.active]
+    },
+    currentScreen () {
+      let channel = []
+      this.allchannels.forEach(ele => {
+        const index = this.channels.findIndex(item => item.id === ele.id)
+        if (index === -1) {
+          channel.push(ele)
+        }
+      })
+      return channel
     }
   },
   methods: {
-    showDialogs (data) {
-      this.showDialog = true
-      this.data = data
+    async getChannel () {
+      let channels = []
+      if (this.userToken) {
+        const { data } = await userChannel()
+        channels = data.data.channels
+      } else {
+        let localStorage = getItem('channels')
+        if (localStorage) {
+          channels = localStorage
+        } else {
+          const { data } = await userChannel()
+          channels = data.data.channels
+        }
+      }
+      channels.forEach(item => {
+        item.articles = []
+        item.loading = false
+        item.finished = false
+        item.preTimestamp = null
+        item.isLoading = false
+      })
+      this.channels = channels
     },
-    confirms () {
-      this.isRubbishShow = false
-    },
-    async fn (type) {
-      try {
-        await feedback({
-          channelId: this.data.art_id.toString(),
-          type
+    async addChannel (item) {
+      this.channels.push(item)
+      if (this.userToken) {
+        const channel = []
+        this.channels.slice(1).forEach((ele, index) => {
+          channel.push({
+            id: ele.id,
+            seq: index + 2
+          })
         })
-        this.$toast.success('反馈成功!')
-      } catch (error) {
-        this.$toast.fail('您已反馈该文章,请勿重复!')
+        await changeChannel(channel)
+      } else {
+        setItem('channels', this.channels)
       }
     },
-    async getChannel () {
-      const { data } = await channel()
+    async editChannel (item, index) {
+      if (this.isEdit) {
+        this.channels.splice(index, 1)
+        if (this.userToken) {
+          await removeChannel(item.id)
+        } else {
+          setItem('channels', this.channels)
+        }
+      } else {
+        this.showPopur = false
+        this.active = index
+      }
+    },
+    async getAllChannel () {
+      const { data } = await allChannel()
       data.data.channels.forEach(item => {
         item.articles = []
         item.loading = false
@@ -125,7 +197,7 @@ export default {
         item.preTimestamp = null
         item.isLoading = false
       })
-      this.channels = data.data.channels
+      this.allchannels = data.data.channels
     },
     async onLoad () {
       // 异步更新数据
@@ -155,10 +227,29 @@ export default {
         message: '刷新成功',
         icon: 'hot-o'
       })
+    },
+    showDialogs (data) {
+      this.showDialog = true
+      this.data = data
+    },
+    confirms () {
+      this.isRubbishShow = false
+    },
+    async fn (type) {
+      try {
+        await feedback({
+          channelId: this.data.art_id.toString(),
+          type
+        })
+        this.$toast.success('反馈成功!')
+      } catch (error) {
+        this.$toast.fail('您已反馈该文章,请勿重复!')
+      }
     }
   },
   created () {
     this.getChannel()
+    this.getAllChannel()
   }
 }
 </script>
@@ -204,10 +295,22 @@ export default {
     }
     .icon {
         position: sticky;
-        right: 2px;
         display: flex;
+        right:0;
         align-items: center;
+        background-color: #fff;
+        height: 40px;
+        width: 30px;
     }
-}
 
+}
+.bigIco {
+    padding:5px;
+    margin-left:10px;
+}
+.smallIco {
+        position: absolute;
+        right:-5px;
+        top:-5px;
+    }
 </style>
