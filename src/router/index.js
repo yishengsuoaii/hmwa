@@ -15,6 +15,11 @@ export default new Router({
       path: '/login',
       component: Login
     },
+    {
+      name: 'search',
+      path: '/search',
+      component: () => import('@/views/search')
+    },
     { // 有默认二级子路由不需要有name属性
       // name: 'tabbar',
       path: '/tabbar',

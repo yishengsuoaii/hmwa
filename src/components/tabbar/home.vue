@@ -1,8 +1,10 @@
 <template>
     <div>
         <!-- 顶部 -->
-        <van-nav-bar title="首页" fixed />
-
+        <van-nav-bar fixed >
+            <van-button class="nav_btn" slot="title" round plain type="primary" to="search">搜索</van-button>
+            <van-icon name="search" slot="right" color="red"  size="36px"/>
+        </van-nav-bar>
         <!-- 文章列表及navBar -->
         <van-tabs v-model="active" title-active-color="blue" color="skyblue">
             <van-tab :title="item.name" v-for="item in channels" :key="item.id">
@@ -102,7 +104,7 @@ export default {
       active: 0,
       channels: [],
       allchannels: [],
-      showPopur: true,
+      showPopur: false,
       showDialog: false,
       isRubbishShow: false,
       data: {},
@@ -255,6 +257,9 @@ export default {
 </script>
 
 <style lang="less">
+.nav_btn{
+    width:100%;
+}
 .van-tabs{
     .van-tabs__wrap {
         position: fixed;
