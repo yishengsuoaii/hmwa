@@ -20,6 +20,12 @@ export default new Router({
       path: '/search',
       component: () => import('@/views/search')
     },
+    {
+      name: 'search-result',
+      path: '/search/:q',
+      component: () => import('@/views/search/searchresult')
+
+    },
     { // 有默认二级子路由不需要有name属性
       // name: 'tabbar',
       path: '/tabbar',
