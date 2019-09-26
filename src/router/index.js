@@ -26,6 +26,11 @@ export default new Router({
       component: () => import('@/views/search/searchresult')
 
     },
+    {
+      name: 'article',
+      path: '/article/:articleId',
+      component: () => import('@/views/article')
+    },
     { // 有默认二级子路由不需要有name属性
       // name: 'tabbar',
       path: '/tabbar',

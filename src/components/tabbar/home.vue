@@ -10,7 +10,10 @@
             <van-tab :title="item.name" v-for="item in channels" :key="item.id">
                 <van-pull-refresh v-model="item.isLoading" @refresh="onRefresh">
                     <van-list v-model=" item.loading" :finished=" item.finished" finished-text="已经到底了,去其他频道看看吧" @load="onLoad">
-                        <van-cell v-for="items in  item.articles" :key="items.art_id.toString()" :title="items.title">
+                        <van-cell v-for="items in  item.articles" :key="items.art_id.toString()"
+                        :title="items.title" @click="$router.push({name:'article',params:{
+                          articleId:items.art_id.toString()
+                        }})">
                             <div slot="label">
                                 <van-grid border :column-num="3">
                                     <van-grid-item v-for="(ins,index) in items.cover.images" :key="index">

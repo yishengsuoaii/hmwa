@@ -11,3 +11,44 @@ export const article = ({ channelId, timestamp, withTop }) => {
     }
   })
 }
+
+export const getArticle = articleId => {
+  return request({
+    url: `/app/v1_0/articles/${articleId}`,
+    method: 'GET'
+  })
+}
+
+export const likingArticle = articleId => {
+  return request({
+    url: '/app/v1_0/article/likings',
+    method: 'POST',
+    data: {
+      target: articleId
+    }
+  })
+}
+
+export const unLikingArticle = articleId => {
+  return request({
+    url: `/app/v1_0/article/likings/${articleId}`,
+    method: 'DELETE'
+  })
+}
+
+export const likeArticle = articleId => {
+  return request({
+    url: '/app/v1_0/article/dislikes',
+    method: 'POST',
+    data: {
+      target: articleId
+    }
+  })
+}
+
+export const unLikeArticle = articleId => {
+  return request({
+    url: `/app/v1_0/article/dislikes/${articleId}`,
+    method: 'DELETE'
+  })
+}

@@ -8,7 +8,7 @@ import {
   Icon, Cell, CellGroup, Tabbar,
   TabbarItem, Tab, Tabs, List, PullRefresh,
   Grid, GridItem, Image, Lazyload, Popup,
-  Dialog, Tag, Search }
+  Dialog, Tag, Search, Loading }
   from 'vant'
 
 import '@/styles/index.less'
@@ -26,7 +26,7 @@ Vue.use(Button).use(NavBar).use(Field).use(Tag)
   .use(Tabbar).use(TabbarItem).use(Tab).use(Tabs)
   .use(List).use(PullRefresh).use(Grid).use(GridItem)
   .use(Image).use(Lazyload).use(Popup).use(Dialog)
-  .use(Search)
+  .use(Search).use(Loading)
 Vue.config.productionTip = false
 
 for (let rule in rules) {

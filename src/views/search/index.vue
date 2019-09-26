@@ -24,7 +24,7 @@
                 </div>
             </van-cell>
             <van-cell :title="item" v-for="(item,index) in historyList" :key="index" @click="onSearch (item)">
-                <van-icon v-show="isDeleteShow" name="close" color="red" slot="right-icon" style="line-height: inherit;" @click="historyList.splice(index,1)"/>
+                <van-icon v-show="isDeleteShow" name="close" color="red" slot="right-icon" style="line-height: inherit;" @click.stop="historyList.splice(index,1)"/>
             </van-cell>
         </van-cell-group>
     </div>

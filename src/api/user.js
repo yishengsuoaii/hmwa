@@ -10,3 +10,20 @@ export const Login = ({ mobile, code }) => {
     }
   })
 }
+
+export const attention = articleId => {
+  return request({
+    url: '/app/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target: articleId
+    }
+  })
+}
+
+export const unAttention = articleId => {
+  return request({
+    url: `/app/v1_0/user/followings/${articleId}`,
+    method: 'DELETE'
+  })
+}
