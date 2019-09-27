@@ -50,7 +50,7 @@
     closeable
     :style="{ height: '95%' }"
     >
-    <children-b :comment="comments" :articleId="articleId"></children-b>
+    <children-b :comment="comments" :articleId="articleId" v-if="showPopup"></children-b>
     </van-popup>
 
   </div>

@@ -7,3 +7,6 @@ dayjs.locale('zh-cn')
 export const rTime = date => {
   return dayjs().from(dayjs(date))
 }
+export const formatDate = date => {
+  return dayjs(date).format('YYYY-MM-DD')
+}
